@@ -6,7 +6,48 @@ namespace GameEvents
 {
     public static class EventBus
     {
-        
+        private static Dictionary<Type, Delegate> _subscribers = new Dictionary<Type, Delegate>();
+
+        public static void Subscribe<T>(Action<T> handler) where T : struct
+        {
+            Type eventType = typeof(T);
+
+            if (_subscribers.ContainsKey(eventType))
+            {
+                _subscribers[eventType] = Delegate.Combine(_subscribers[eventType], handler);
+            }
+            else
+            {
+                _subscribers[eventType] = handler;
+            }
+        }
+        public static void Unsubscribe<T>(Action<T> handler) where T : struct
+        {
+            Type eventType = typeof(T);
+
+            if (_subscribers.ContainsKey(eventType))
+            {
+                _subscribers[eventType] = Delegate.Remove(_subscribers[eventType], handler);
+                if (_subscribers[eventType] == null)
+                {
+                    _subscribers.Remove(eventType);
+                }
+            }
+        }
+        public static void Publish<T>(T eventData) where T : struct
+        {
+            Type eventType = typeof(T);
+
+            if (_subscribers.ContainsKey(eventType))
+            {
+                var handler = _subscribers[eventType] as Action<T>;
+                handler?.Invoke(eventData);
+            }
+        }
+        public static void Clear()
+        {
+            _subscribers.Clear();
+        }
     }
     public struct EntityKilledEvent
     {
