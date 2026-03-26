@@ -5,5 +5,5 @@ public class QuestObjective
     public int RequiredAmount;
     public int CurrentAmmount;
 
-    public bool IsComplete() => CurrentAmmount > RequiredAmount;
+    public bool IsComplete() => CurrentAmmount >= RequiredAmount;
 }

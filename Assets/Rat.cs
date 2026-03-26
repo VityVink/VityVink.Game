@@ -10,6 +10,14 @@ public class Rat : MonoBehaviour
     {
         QuestManager questManager = FindObjectOfType<QuestManager>();
         questManager.OnEnemyKilled(RatID);
-        Destroy(gameObject);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Die();
+
+        }
     }
 }
