@@ -12,5 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56ab22498bfdf4648a3deb374b664061, type: 3}
   m_Name: Quest
   m_EditorClassIdentifier: 
-  Title: 
-  Description: 
+  Title: Help me!
+  Description: Slime is attack
+  tasks:
+  - Type: 0
+    TargerName: Slime
+    RequiredAmmount: 3
+  - Type: 0
+    TargerName: Slime
+    RequiredAmmount: 10
