@@ -7,5 +7,5 @@ public class TaskData
 {
     public TaskType Type;
     public string TargerName;
-    public int RequiredAmmount;
+    public int RequiredAmount;
 }

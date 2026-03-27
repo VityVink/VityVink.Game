@@ -5,10 +5,12 @@ public class QuestManager : MonoBehaviour
 {
     public QuestData questData1;
     public List<QuestInstance> CurrentQuests = new List<QuestInstance>();
+    public List<QuestInstance> CompleteQuests = new List<QuestInstance>();
     
     public void TakeQuest(QuestData questData)
     {
         QuestInstance newQuest = new QuestInstance(questData);
+        newQuest.QuestState = QuestState.InProgress;
         CurrentQuests.Add(newQuest);
         Debug.Log($"Quest {questData.Title} is active");
     }
@@ -19,27 +21,42 @@ public class QuestManager : MonoBehaviour
             for (int i = 0; i < quest.QuestData.tasks.Count; i++)
             {
                 var task = quest.QuestData.tasks[i].TargerName;
-                if (quest.QuestData.tasks[i].Type == TaskType.Kill && enemyName == task)
+                if (quest.QuestState == QuestState.InProgress &&
+                    enemyName == task &&
+                    quest.QuestData.tasks[i].Type == TaskType.Kill)
                 {
-                    quest.CurrentAmmount[i]++;
-                    Debug.Log($"Quest {quest.QuestData.Title} progress: " +
-                        $"{quest.CurrentAmmount[i]}/" +
-                        $"{quest.QuestData.tasks[i].RequiredAmmount}!");
-                    if (quest.IsAllTaskComplete())
+                    quest.CurrentAmount[i]++;
+                    if (quest.CurrentAmount[i] > quest.QuestData.tasks[i].RequiredAmount)
                     {
-                        Debug.Log($"Quest {quest.QuestData.Title} is complete!");
+                        continue;
                     }
+                    else
+                    {
+                        Debug.Log($"Quest {quest.QuestData.Title} progress: " +
+                            $"{quest.CurrentAmount[i]}/" +
+                            $"{quest.QuestData.tasks[i].RequiredAmount}!");
+                    }
+                }
+                if (quest.IsAllTaskComplete())
+                {
+                    Debug.Log($"Quest {quest.QuestData.Title} is complete!");
+                    quest.QuestState = QuestState.Complete;
+                    GetReward();
+                    CompleteQuests.Add(quest);
                 }
             }
         }
+        foreach (var quest in CompleteQuests)
+        {
+            CurrentQuests.Remove(quest);
+        }
+    }
+    public void GetReward()
+    {
+        Debug.Log("Quest is rewarded!");
     }
     void Start()
     {
         TakeQuest(questData1);
-    }
-
-    void Update()
-    {
-        
     }
 }
