@@ -10,12 +10,23 @@ public class QuestInstance
 
     public QuestInstance(QuestData questData) 
     {
-        this.QuestData = questData;
+        QuestData = questData;
         CurrentAmmount = new List<int>();
         foreach (var task in questData.tasks)
         {
             CurrentAmmount.Add(0);
             Debug.WriteLine(CurrentAmmount);
         }
+    }
+    public bool IsAllTaskComplete()
+    {
+        for (int i = 0; i < CurrentAmmount.Count; i++)
+        {
+            if (CurrentAmmount[i] < QuestData.tasks[i].RequiredAmmount)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
