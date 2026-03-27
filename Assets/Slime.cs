@@ -5,15 +5,15 @@ using UnityEngine;
 public class Slime : MonoBehaviour
 {
     private string enemyName = "Slime";
-    public QuestManager questManager = FindObjectOfType<QuestManager>();
 
     private void Die()
     {
+        QuestManager questManager = FindObjectOfType<QuestManager>();
         questManager.OnEnemyKilled(enemyName);
     }
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
             Die();
     }
 }

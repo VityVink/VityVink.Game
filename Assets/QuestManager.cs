@@ -10,6 +10,7 @@ public class QuestManager : MonoBehaviour
     {
         QuestInstance newQuest = new QuestInstance(questData);
         CurrentQuests.Add(newQuest);
+        Debug.Log($"Quest {questData.Title} is active");
     }
     public void OnEnemyKilled(string enemyName)
     {
@@ -17,7 +18,8 @@ public class QuestManager : MonoBehaviour
         {
             for (int i = 0; i < quest.QuestData.tasks.Count; i++)
             {
-                if (quest.QuestData.tasks[i].Type == TaskType.Kill)
+                var task = quest.QuestData.tasks[i].TargerName;
+                if (quest.QuestData.tasks[i].Type == TaskType.Kill && enemyName == task)
                 {
                     quest.CurrentAmmount[i]++;
                     Debug.Log($"Quest {quest.QuestData.Title} progress: " +
