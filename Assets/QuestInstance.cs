@@ -8,7 +8,7 @@ public class QuestInstance
     public List<int> CurrentAmmount;
     public QuestState QuestState;
 
-    QuestInstance(QuestData questData) 
+    public QuestInstance(QuestData questData) 
     {
         this.QuestData = questData;
         CurrentAmmount = new List<int>();
