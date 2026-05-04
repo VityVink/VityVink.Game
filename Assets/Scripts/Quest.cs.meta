@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: 71abf2b4c0baa4844be4c5ac902f672f
+guid: 51c5f1bfa0af6734585a793a9a8ac2d4
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - questData1: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
