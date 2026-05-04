@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 
@@ -11,13 +12,14 @@ public class Quest
     public QuestType type;
     public string targetID;
     public int targetAmount;
+    public List<Reward> rewards;
 
     // Динамические данные
     public int currentAmount;
     public bool isCompleted;
 
     // Конструктор (для удобного создания квестов)
-    public Quest(string id, string title, string description, QuestType type, string targetID, int targetAmount)
+    public Quest(string id, string title, string description, QuestType type, string targetID, int targetAmount, List<Reward> rewards = null)
     {
         this.id = id;
         this.title = title;
@@ -25,6 +27,7 @@ public class Quest
         this.type = type;
         this.targetID = targetID;
         this.targetAmount = targetAmount;
+        this.rewards = rewards ?? new List<Reward>(); // если null - пустой список Reward
 
         this.currentAmount = 0;
         this.isCompleted = false;
@@ -59,6 +62,12 @@ public class Quest
         if (type == QuestType.ReachPoint || type == QuestType.TalkToNPC)
             return isCompleted ? "Выполнен" : "Не выполнен";
         return $"{currentAmount}/{targetAmount}";
+    }
+    
+    // Получить награду за выполнение задания
+    public List<Reward> GetRewards()
+    {
+        return rewards;
     }
 }
 

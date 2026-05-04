@@ -5,6 +5,7 @@ public class QuestManager : MonoBehaviour
 {
     [Header("Ссылки на другие системы")]
     [SerializeField] private PlayerActions playerActions;
+    [SerializeField] private RewardManager rewardManager;
 
     [Header("Список квестов (для теста)")]
     [SerializeField] private List<Quest> activeQuests = new List<Quest>();
@@ -14,6 +15,8 @@ public class QuestManager : MonoBehaviour
         // Если ссылки не заданы, то поиск совершается по сцене
         if (playerActions == null)
             playerActions = FindObjectOfType<PlayerActions>();
+        if (rewardManager == null)
+            rewardManager = FindObjectOfType<RewardManager>();
 
         // При наличии объекта происходит подписка на все события
         if (playerActions != null)
@@ -23,7 +26,10 @@ public class QuestManager : MonoBehaviour
             Debug.Log("QuestManager подписался на события");
         }
         else
-            Debug.LogError("QuestManager: PlayerAction не найден на сцене!");
+            Debug.LogError($"QuestManager: PlayerAction не найден на сцене!");
+
+        if (rewardManager == null)
+            Debug.LogWarning("QuestManager: RewardManager не найден награды не будут выданы!");
 
         // Создание тестовых квестов
         CreateTestQuests();
@@ -62,6 +68,8 @@ public class QuestManager : MonoBehaviour
 
                 if (quest.isCompleted)
                     Debug.Log($"!!! КВЕСТ ВЫПОЛНЕН: {quest.title} !!!");
+                if (rewardManager != null)
+                    rewardManager.GrantRewards(quest.GetRewards());
             }
         }
         if (!anyQuestUpdated)
@@ -101,6 +109,8 @@ public class QuestManager : MonoBehaviour
                 anyQuestUpdated = true;
                 Debug.Log($"Завершён квест: {quest.title}");
                 Debug.Log($"!!! КВЕСТ ВЫПОЛНЕН: {quest.title} !!!");
+                if (rewardManager != null)
+                    rewardManager.GrantRewards(quest.GetRewards());
             }
         }
 
@@ -115,57 +125,82 @@ public class QuestManager : MonoBehaviour
 
     private void CreateTestQuests()
     {
-        // Квест 1: убить 5 гоблинов
+        // Награда: 50 опыта и 10 золота за убийство гоблинов
+        List<Reward> killRewards = new List<Reward>
+    {
+        new Reward(RewardType.Exp, 50),
+        new Reward(RewardType.Gold, 10)
+    };
+
         Quest killGoblins = new Quest(
             "kill_5_goblins",
             "Истребитель гоблинов",
             "Убейте 5 гоблинов",
             QuestType.Kill,
             "Goblin",
-            5
+            5,
+            killRewards
         );
         activeQuests.Add(killGoblins);
 
-        // Квест 2: собрать 100 золота
+        // Награда: 100 золота за сбор
+        List<Reward> goldRewards = new List<Reward>
+    {
+        new Reward(RewardType.Gold, 100)
+    };
+
         Quest collectGold = new Quest(
             "collect_100_gold",
             "Богатство",
             "Соберите 100 золота",
             QuestType.Collect,
             "Gold",
-            100
+            100,
+            goldRewards
         );
         activeQuests.Add(collectGold);
 
-        // Квест 3: поговорить с кузнецом
+        // Награда: предмет "SteelSword" за разговор с кузнецом
+        List<Reward> talkRewards = new List<Reward>
+    {
+        new Reward("SteelSword", 1)
+    };
+
         Quest talkBlacksmith = new Quest(
             "talk_to_blacksmith",
             "Новый клиент",
             "Поговорите с кузнецом",
             QuestType.TalkToNPC,
             "Blacksmith",
-            1
+            1,
+            talkRewards
         );
         activeQuests.Add(talkBlacksmith);
 
-        // Квест 4: достичь таверны
+        // Награда: 20 опыта за достижение таверны
+        List<Reward> reachRewards = new List<Reward>
+    {
+        new Reward(RewardType.Exp, 20)
+    };
+
         Quest reachTavern = new Quest(
             "reach_tavern",
             "Отдохнуть",
             "Дойдите до таверны",
             QuestType.ReachPoint,
             "Tavern",
-            1
+            1,
+            reachRewards
         );
         activeQuests.Add(reachTavern);
 
-        Debug.Log($"Создано {activeQuests.Count} тестовых квестов");
+        Debug.Log($"Создано {activeQuests.Count} тестовых квестов с наградами");
         ShowAllQuestsStatus();
     }
 
-    
-    
-    
+
+
+
     // Показывает все квесты в консоли
     private void ShowAllQuestsStatus()
     {
