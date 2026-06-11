@@ -14,16 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questId: 
   questName: 
-  description: 
   questIcon: {fileID: 0}
   goal:
     rid: -2
-  rewards:
-  - rid: -2
-  - rid: -2
-  isRepeatable: 0
-  prerequisites:
-  - {fileID: 0}
+  rewards: []
+  prerequisites: []
   references:
     version: 2
     RefIds:

@@ -3,26 +3,32 @@ using UnityEngine;
 [System.Serializable]
 public abstract class Goal
 {
-    public string description;      // описание цели для UI
-    public int requiredAmount;      // требуемое количество
+    public abstract string Description { get; }      // описание цели для UI
 
     public abstract bool IsComplete(int currentProgress);
     public abstract string GetProgressText(int currentProgress);
     public abstract void UpdateProgress(ref int currentProgress, object eventData);
 }
+public abstract class ProgressGoal : Goal
+{
+    public int requiredAmount;  // поле здесь – общее для всех исчисляемых целей
 
+    public override bool IsComplete(int currentProgress) => currentProgress >= requiredAmount;
+    public override string GetProgressText(int currentProgress) => $"{currentProgress} / {requiredAmount}";
+}
+public abstract class FlagGoal : Goal
+{
+    public override bool IsComplete(int currentProgress) => currentProgress >= 1;
+    public override string GetProgressText(int currentProgress) => currentProgress >= 1 ? "Выполнено" : "0 / 1";
+}
 
 [System.Serializable]
-public class KillGoal : Goal
+public class KillGoal : ProgressGoal
 {
     public string monsterType;      // "Orc", "Goblin", "Dragon"
-
-    public override bool IsComplete(int currentProgress)
-        => currentProgress >= requiredAmount;
-
-    public override string GetProgressText(int currentProgress)
-        => $"{currentProgress}/{requiredAmount}";
-
+    
+    public override string Description => $"Убить {monsterType} x{requiredAmount}";
+    
     public override void UpdateProgress(ref int currentProgress, object eventData)
     {
         //if (eventData is OnMonsterKilledEvent evt && evt.monsterType == monsterType)
@@ -32,15 +38,11 @@ public class KillGoal : Goal
 
 
 [System.Serializable]
-public class CollectGoal : Goal
+public class CollectGoal : ProgressGoal
 {
     public string itemId;           // ID предмета для сбора
 
-    public override bool IsComplete(int currentProgress)
-        => currentProgress >= requiredAmount;
-
-    public override string GetProgressText(int currentProgress)
-        => $"{currentProgress}/{requiredAmount}";
+    public override string Description => $"Собрать {itemId} x{requiredAmount}";
 
     public override void UpdateProgress(ref int currentProgress, object eventData)
     {
@@ -51,15 +53,11 @@ public class CollectGoal : Goal
 
 
 [System.Serializable]
-public class TalkGoal : Goal
+public class TalkGoal : FlagGoal
 {
     public string npcId;            // ID NPC для разговора
-
-    public override bool IsComplete(int currentProgress)
-        => currentProgress >= requiredAmount;
-
-    public override string GetProgressText(int currentProgress)
-        => currentProgress >= requiredAmount ? "Выполнено" : "Не выполнено";
+    
+    public override string Description => $"Поговорить с {npcId}";
 
     public override void UpdateProgress(ref int currentProgress, object eventData)
     {
@@ -70,15 +68,11 @@ public class TalkGoal : Goal
 
 
 [System.Serializable]
-public class ReachLocationGoal : Goal
+public class ReachLocationGoal : FlagGoal
 {
     public string locationId;       // ID локации, которую нужно достичь
 
-    public override bool IsComplete(int currentProgress)
-        => currentProgress >= requiredAmount;
-
-    public override string GetProgressText(int currentProgress)
-        => currentProgress >= requiredAmount ? "Выполнено" : "Не выполнено";
+    public override string Description => $"Посетить локацию {locationId}";
 
     public override void UpdateProgress(ref int currentProgress, object eventData)
     {

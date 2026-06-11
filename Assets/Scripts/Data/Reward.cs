@@ -3,8 +3,8 @@ using UnityEngine;
 [System.Serializable]
 public abstract class Reward
 {
-    public string description;      // описание награды для UI
-
+    public abstract string Description { get; }      // описание награды для UI
+    
     public abstract void Give();
 }
 
@@ -13,6 +13,8 @@ public abstract class Reward
 public class GoldReward : Reward
 {
     public int amount;
+
+    public override string Description => $"Золото x{amount}";
 
     public override void Give()
     {
@@ -27,6 +29,8 @@ public class GoldReward : Reward
 public class ExpReward : Reward
 {
     public int amount;
+    
+    public override string Description => $"Опыт x{amount}";
 
     public override void Give()
     {
@@ -41,6 +45,8 @@ public class ItemReward : Reward
 {
     public string itemId;
     public int quantity;
+
+    public override string Description => $"{itemId} x{quantity}";
 
     public override void Give()
     {
