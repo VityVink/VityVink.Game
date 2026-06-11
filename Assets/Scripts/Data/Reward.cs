@@ -5,6 +5,8 @@ public abstract class Reward
 {
     public abstract string Description { get; }      // описание награды для UI
     
+    public virtual string Validate() => null; // null = ошибок нет
+
     public abstract void Give();
 }
 
@@ -15,6 +17,12 @@ public class GoldReward : Reward
     public int amount;
 
     public override string Description => $"Золото x{amount}";
+
+    public override string Validate()
+    {
+        if (amount <= 0) return "Gold amount must be > 0";
+        return null;
+    }
 
     public override void Give()
     {
@@ -32,6 +40,12 @@ public class ExpReward : Reward
     
     public override string Description => $"Опыт x{amount}";
 
+    public override string Validate()
+    {
+        if (amount <= 0) return "Experience amount must be > 0";
+        return null;
+    }
+
     public override void Give()
     {
         Debug.Log($"[Reward] Выдано опыта: {amount}");
@@ -47,6 +61,13 @@ public class ItemReward : Reward
     public int quantity;
 
     public override string Description => $"{itemId} x{quantity}";
+
+    public override string Validate()
+    {
+        if (string.IsNullOrEmpty(itemId)) return "Item ID cannot be empty";
+        if (quantity <= 0) return "Item quantity must be > 0";
+        return null;
+    }
 
     public override void Give()
     {

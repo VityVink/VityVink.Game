@@ -12,15 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c70c148182c55f04f9c5e9987412ab7f, type: 3}
   m_Name: NewQuest
   m_EditorClassIdentifier: 
-  questId: 
-  questName: 
+  questId: dfgadgf
+  questName: dfgadf
   questIcon: {fileID: 0}
   goal:
-    rid: -2
-  rewards: []
-  prerequisites: []
+    rid: 6273235255536123937
+  rewards:
+  - rid: 6273235255536123938
+  prerequisites:
+  - {fileID: 11400000, guid: 817fd5446ebbefd42a10985e3a0c71df, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 6273235255536123937
+      type: {class: KillGoal, ns: , asm: Assembly-CSharp}
+      data:
+        requiredAmount: 12
+        monsterType: adfgga
+    - rid: 6273235255536123938
+      type: {class: GoldReward, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 10

@@ -4,6 +4,7 @@ using UnityEngine;
 public abstract class Goal
 {
     public abstract string Description { get; }      // описание цели для UI
+    public virtual string Validate() => null; // null = ошибок нет
 
     public abstract bool IsComplete(int currentProgress);
     public abstract string GetProgressText(int currentProgress);
@@ -25,10 +26,15 @@ public abstract class FlagGoal : Goal
 [System.Serializable]
 public class KillGoal : ProgressGoal
 {
-    public string monsterType;      // "Orc", "Goblin", "Dragon"
+    public string entityId;      // "Orc", "Goblin", "Dragon"
     
-    public override string Description => $"Убить {monsterType} x{requiredAmount}";
-    
+    public override string Description => $"Убить {entityId} x{requiredAmount}";
+    public override string Validate()
+    {
+        if (requiredAmount <= 0) return "Required amount must be > 0";
+        if (string.IsNullOrEmpty(entityId)) return "Entity ID cannot be empty";
+        return null;
+    }
     public override void UpdateProgress(ref int currentProgress, object eventData)
     {
         //if (eventData is OnMonsterKilledEvent evt && evt.monsterType == monsterType)
@@ -43,6 +49,13 @@ public class CollectGoal : ProgressGoal
     public string itemId;           // ID предмета для сбора
 
     public override string Description => $"Собрать {itemId} x{requiredAmount}";
+
+    public override string Validate()
+    {
+        if (requiredAmount <= 0) return "Required amount must be > 0";
+        if (string.IsNullOrEmpty(itemId)) return "Item ID cannot be empty";
+        return null;
+    }
 
     public override void UpdateProgress(ref int currentProgress, object eventData)
     {
@@ -59,6 +72,12 @@ public class TalkGoal : FlagGoal
     
     public override string Description => $"Поговорить с {npcId}";
 
+    public override string Validate()
+    {
+        if (string.IsNullOrEmpty(npcId)) return "NPC ID cannot be empty";
+        return null;
+    }
+
     public override void UpdateProgress(ref int currentProgress, object eventData)
     {
         //if (eventData is OnNPCTalkedEvent evt && evt.npcId == npcId)
@@ -73,6 +92,12 @@ public class ReachLocationGoal : FlagGoal
     public string locationId;       // ID локации, которую нужно достичь
 
     public override string Description => $"Посетить локацию {locationId}";
+
+    public override string Validate()
+    {
+        if (string.IsNullOrEmpty(locationId)) return "Location ID cannot be empty";
+        return null;
+    }
 
     public override void UpdateProgress(ref int currentProgress, object eventData)
     {
